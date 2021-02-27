@@ -1,0 +1,3 @@
+#!/bin/bash
+cmake -H. -Bbuilds/debug -DCMAKE_BUILD_TYPE=Debug
+cmake -H. -Bbuilds/release -DCMAKE_BUILD_TYPE=Release
