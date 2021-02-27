@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
     std::cerr << "ERROR: Could not open camera" << std::endl;
     return 1;
   }
-  std::cout << "Hello" << std::endl;
+  camera.release();
   return 0;
 }
 

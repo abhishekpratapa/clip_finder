@@ -26,6 +26,8 @@ include_directories(${CMAKE_SOURCE_DIR}/extern/opencv/modules/video/include)
 include_directories(${CMAKE_SOURCE_DIR}/extern/opencv/modules/videoio/include)
 include_directories(${CMAKE_SOURCE_DIR}/extern/opencv/modules/world/include)
 
+include_directories(${CMAKE_BINARY_DIR})
+
 add_executable(clip_finder
   main.cpp
 )
