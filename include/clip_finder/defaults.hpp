@@ -7,3 +7,7 @@
  */
 
 #pragma once
+
+namespace clip_finder {
+namespace defaults {}
+}  // namespace clip_finder
