@@ -2,7 +2,7 @@ project(ClipFinder)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/target/)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 include_directories(${CMAKE_SOURCE_DIR}/extern/opencv/include)
 include_directories(${CMAKE_SOURCE_DIR}/extern/opencv/modules/calib3d/include)
@@ -29,6 +29,8 @@ include_directories(${CMAKE_SOURCE_DIR}/extern/opencv/modules/world/include)
 include_directories(${CMAKE_BINARY_DIR})
 
 add_executable(clip_finder
+  camera.cpp
+  lobe.cpp
   main.cpp
 )
 
@@ -50,7 +52,7 @@ add_dependencies(clip_finder
   opencv_video
   opencv_videoio
 )
-  
+
 target_link_libraries(clip_finder
   opencv_calib3d
   opencv_core

@@ -1,8 +1,14 @@
+/*    Copyright (c) 2021 Abhishek
+ *    All rights reserved
+ *
+ *    You should have received a copy of the license with this file. If not,
+ *    please or visit:
+ *      https://github.com/abhishekpratapa/clip_finder/blob/master/LICENSE
+ */
+
 #include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-
-using namespace cv;
 
 int main(int argc, char* argv[]) {
   cv::VideoCapture camBottomRight(0);
@@ -10,12 +16,13 @@ int main(int argc, char* argv[]) {
   cv::VideoCapture camBottomLeft(3);
   cv::VideoCapture camTopLeft(4);
 
-  if (!camBottomRight.isOpened() || !camTopRight.isOpened() || !camBottomLeft.isOpened() || !camTopLeft.isOpened()) {
+  if (!camBottomRight.isOpened() || !camTopRight.isOpened() ||
+      !camBottomLeft.isOpened() || !camTopLeft.isOpened()) {
     std::cerr << "ERROR: Could not open cameras" << std::endl;
     return 1;
   }
   // create a window to display the images from the webcam
-  cv::namedWindow("Webcam", WINDOW_AUTOSIZE);
+  cv::namedWindow("Webcam", cv::WINDOW_AUTOSIZE);
 
   // this will contain the image from the webcam
   cv::Mat camBRFrame;
