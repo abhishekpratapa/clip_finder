@@ -8,6 +8,25 @@
 
 #pragma once
 
+#include <cstddef>
+
 namespace clip_finder {
-namespace defaults {}
+namespace defaults {
+
+namespace Camera {
+
+constexpr size_t kTopLeft = 4;
+constexpr size_t kTopRight = 1;
+constexpr size_t kBottomLeft = 3;
+constexpr size_t kBottomRight = 0;
+
+}  // namespace Camera
+
+namespace NeuralNetwork {
+
+constexpr float kConfidenceThreshold = 0.95f;
+
+}
+
+}  // namespace defaults
 }  // namespace clip_finder

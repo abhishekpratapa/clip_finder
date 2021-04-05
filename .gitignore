@@ -1,3 +1,8 @@
 .DS_Store
 builds
 target
+.so
+.a
+models/darknet/*
+__pycache__
+venv-py

@@ -1,24 +1,20 @@
 project(ClipFinder)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/target/)
-set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/target/)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/target/)
 
 include(OpenCVIncludes)
 set_opencv_includes()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_library(clip_finder
+add_library(ClipFinder
   camera.cpp
+  config.cpp
+  detector.cpp
   lobe.cpp
 )
 
-
-# add_executable(clip_finder
-#   main.cpp
-# )
-
-add_dependencies(clip_finder
+add_dependencies(ClipFinder
   opencv_calib3d
   opencv_core
   opencv_dnn
@@ -37,7 +33,7 @@ add_dependencies(clip_finder
   opencv_videoio
 )
 
-target_link_libraries(clip_finder
+target_link_libraries(ClipFinder
   opencv_calib3d
   opencv_core
   opencv_dnn

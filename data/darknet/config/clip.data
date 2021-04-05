@@ -1,0 +1,5 @@
+classes= 1
+train = /Users/romieklund/Desktop/Projects/clip_finder/data/darknet/config/train.txt
+valid = /Users/romieklund/Desktop/Projects/clip_finder/data/darknet/config/train.txt
+names = /Users/romieklund/Desktop/Projects/clip_finder/data/darknet/config/clip.names
+backup = backup
