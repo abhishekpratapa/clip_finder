@@ -76,6 +76,14 @@ void Detector::CheckOutputType() {
 
 std::vector<Clip> Detector::Predict(cv::Mat& frame) {
   std::vector<cv::Mat> outputs;
+
+  cv::Size size(416, 416);
+
+  cv::Mat blob;
+  cv::dnn::blobFromImage(frame, blob, 1.0, size, cv::Scalar(), false, false,
+                         CV_8U);
+  model_.setInput(blob);
+
   model_.forward(outputs, out_layer_names_);
 
   this->CheckOutputType();
