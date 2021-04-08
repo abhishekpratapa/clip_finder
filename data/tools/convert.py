@@ -51,19 +51,29 @@ def process_vott(images, config):
 
 def save_darknet_labels(darknet_data, darknet_dir):
     label_dir = os.path.join(darknet_dir, "labels")
+    image_dir = os.path.join(darknet_dir, "images")
 
     try:
         os.mkdir(label_dir)
     except OSError as error:
         print(error)
 
+    try:
+        os.mkdir(image_dir)
+    except OSError as error:
+        print(error)
+
     for dd in darknet_data.keys():
         label_path = os.path.join(label_dir, dd + ".txt")
+        label_image_path = os.path.join(image_dir, dd + ".txt")
         label_file = open(label_path, "w")
+        label_image_file = open(label_image_path, "w")
         label_data = darknet_data[dd]
         for ld in label_data:
             label_file.write(str(ld["class"]) + " " + str(ld["x"]) + " " + str(ld["y"]) + " " + str(ld["width"]) + " " + str(ld["height"]) + " \n")
+            label_image_file.write(str(ld["class"]) + " " + str(ld["x"]) + " " + str(ld["y"]) + " " + str(ld["width"]) + " " + str(ld["height"]) + " \n")
         label_file.close()
+        label_image_file.close()
 
 def save_darknet_images(darknet_dir, images):
     images_dir = os.path.join(darknet_dir, "images")
