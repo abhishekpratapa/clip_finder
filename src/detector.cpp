@@ -8,6 +8,9 @@
 
 #include <clip_finder/detector.hpp>
 
+#include <algorithm>
+#include <iostream>
+
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
@@ -16,39 +19,36 @@ namespace processing {
 
 namespace {
 
-std::vector<Clip> PostProcessing(cv::Mat& frame,
-                                 std::vector<cv::Mat>& outputs) {
+constexpr size_t kInputWidth = 416;
+constexpr size_t kInputHeight = 416;
+constexpr bool kSwapRBChannels = true;
+constexpr bool kCrop = false;
+
+const cv::Size kInputSize = {kInputWidth, kInputHeight};
+
+std::vector<Clip> PostProcessing(cv::Mat& frame, std::vector<cv::Mat>& outputs,
+                                 float confidence_threshold) {
   std::vector<Clip> clips;
 
-  for (const auto& out : outputs) {
-    float* data = reinterpret_cast<float*>(out.data);
-    for (size_t i = 0; i < out.total(); i += 7) {
-      int left = static_cast<int>(data[i + 3]);
-      int top = static_cast<int>(data[i + 4]);
-      int right = static_cast<int>(data[i + 5]);
-      int bottom = static_cast<int>(data[i + 6]);
+  for (size_t i = 0; i < outputs.size(); ++i) {
+    float* data = reinterpret_cast<float*>(outputs[i].data);
+    for (int j = 0; j < outputs[i].rows; ++j, data += outputs[i].cols) {
+      cv::Mat scores = outputs[i].row(j).colRange(5, outputs[i].cols);
+      cv::Point classIdPoint;
+      double confidence;
+      cv::minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
+      if (confidence > confidence_threshold) {
+        Clip c;
 
-      int width = right - left + 1;
-      int height = bottom - top + 1;
+        c.confidence = static_cast<float>(confidence);
 
-      if (width <= 2 || height <= 2) {
-        left = static_cast<int>(data[i + 3] * frame.cols);
-        top = static_cast<int>(data[i + 4] * frame.rows);
-        right = static_cast<int>(data[i + 5] * frame.cols);
-        bottom = static_cast<int>(data[i + 6] * frame.rows);
-        width = right - left + 1;
-        height = bottom - top + 1;
+        c.pos_x = static_cast<int>(data[0] * frame.cols);
+        c.pos_y = static_cast<int>(data[1] * frame.rows);
+        c.width = static_cast<int>(data[2] * frame.cols);
+        c.height = static_cast<int>(data[3] * frame.rows);
+
+        clips.push_back(c);
       }
-
-      Clip c;
-
-      c.confidence = data[i + 2];
-      c.pos_x = (left + right) / 2;
-      c.pos_y = (top + bottom) / 2;
-      c.width = width;
-      c.height = height;
-
-      clips.push_back(c);
     }
   }
 
@@ -68,27 +68,27 @@ Detector::Detector(Config& config)
 Detector::~Detector() = default;
 
 void Detector::CheckOutputType() {
-  static std::vector<int> out_layers = model_.getUnconnectedOutLayers();
-  static std::string out_layer_type = model_.getLayer(out_layers[0])->type;
+  std::vector<int> out_layers = model_.getUnconnectedOutLayers();
 
-  assert(out_layer_type == "DetectionOutput");
+  for (auto& out : out_layers) {
+    std::string out_layer_type = model_.getLayer(out)->type;
+    assert(out_layer_type == "Region");
+  }
 }
 
 std::vector<Clip> Detector::Predict(cv::Mat& frame) {
+  static cv::Mat blob;
   std::vector<cv::Mat> outputs;
 
-  cv::Size size(416, 416);
+  cv::dnn::blobFromImage(frame, blob, (1.0 / 255.0), kInputSize, cv::Scalar(),
+                         kSwapRBChannels, kCrop, CV_32F);
 
-  cv::Mat blob;
-  cv::dnn::blobFromImage(frame, blob, 1.0, size, cv::Scalar(), false, false,
-                         CV_8U);
   model_.setInput(blob);
-
   model_.forward(outputs, out_layer_names_);
 
   this->CheckOutputType();
 
-  return PostProcessing(frame, outputs);
+  return PostProcessing(frame, outputs, confidence_threshold_);
 }
 
 }  // namespace processing
