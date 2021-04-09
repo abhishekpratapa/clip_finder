@@ -1,6 +1,7 @@
 project(ClipFinder)
 
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/target/)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/target/)
+set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/target/)
 
 include(OpenCVIncludes)
 set_opencv_includes()
