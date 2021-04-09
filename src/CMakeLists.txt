@@ -9,7 +9,7 @@ set_opencv_includes()
 include_directories(${CMAKE_SOURCE_DIR}/include)
 link_directories(${CMAKE_SOURCE_DIR}/target/)
 
-add_library(ClipFinder
+add_library(ClipFinder STATIC
   camera.cpp
   config.cpp
   detector.cpp
