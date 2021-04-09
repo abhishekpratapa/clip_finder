@@ -12,6 +12,7 @@ namespace clip_finder {
 namespace processing {
 
 Lobe::Lobe() {}
+
 Lobe::~Lobe() = default;
 
 }  // namespace processing

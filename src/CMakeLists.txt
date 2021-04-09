@@ -6,6 +6,7 @@ include(OpenCVIncludes)
 set_opencv_includes()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
+link_directories(${CMAKE_SOURCE_DIR}/target/)
 
 add_library(ClipFinder
   camera.cpp
